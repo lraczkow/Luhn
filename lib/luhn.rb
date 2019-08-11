@@ -1,29 +1,29 @@
 module Luhn
   def self.is_valid?(number)
-    #break credit card into individual digits
-    #double every other digit
-    change_num = []
-    digits = number.to_s.split('').map(&:to_i)
-    digits.reverse.each_with_index do |n, index|
-      if index % 2 == 0
-        double_num = n * 2
-        change_num.push(double_num)
-      else
-        change_num.push(n)
+    digits = []
+    reverse = []
+    #break the credit card into individual digits.
+    digits = number.to_s.split("")
+    #double every second digit
+    #If the doubled value is greater than or equal to 10, subtract 9 from value.
+    reverse = digits.reverse
+    reverse.each_with_index do | item, i | 
+      if (i % 2 != 0) then 
+        reverse[i] = item.to_i * 2 
+        if reverse[i] >= 10 
+          reverse[i] = reverse[i] - 9
+        end
       end
     end
 
-    #if doubled value is greater than or equal to 10, subtract 9
-    change_num.map do |i|
-      if i >= 10
-        i-9
-      end
+    #Sum the digits.
+    sum = reverse.inject(0){|sum,x| sum + x.to_i }
+
+    #If sum is divisible by 10 = valid. Otherwise, invalid.
+    if sum % 10 == 0
+      return true
+    else
+      return false
     end
-
-    #sum the digits
-    sum = change_num.inject(:+)
-    #if sum is divisible by 10, it is valid, otherwise its invalid
-    return sum % 10 == 0
-
   end
 end
